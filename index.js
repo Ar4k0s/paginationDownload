@@ -1,6 +1,7 @@
 const express = require("express")
 const mysql = require("mysql")
 const app = express()
+var fs = require('fs');
 
 
 
@@ -22,7 +23,8 @@ app.use((req,res,next)=>{
 })
 app.get("/",function(req,res){
     const query = req.query
-
+    console.log(query)
+    console.log("___________________________________________")
     const sqlInfo={
 
         draw : query.draw,
@@ -62,7 +64,7 @@ app.get("/",function(req,res){
         
         if(err) console.log(err); 
         else{               
-            console.log(result)
+            
             res.json({"draw":sqlInfo.draw,
             "recordsTotal": result[2][0].countAll,
             "recordsFiltered": result[1][0].countFiltered ,"data":result[0]})               
@@ -73,7 +75,22 @@ app.get("/",function(req,res){
     })
 
    
+app.get("/asd",function(req,res){
 
+    sql1=`SELECT * FROM gov WHERE districtname LIKE '%'`
+
+    con.query(sql1, function (err, result) {
+        if(err) console.log(err)
+        fs.appendFile('lol.pdf', JSON.stringify(result), function (err) {
+            if (err) throw err;
+            console.log('Saved!');
+            res.setHeader("Content-Type","application/pdf")
+            res.sendFile("C:\\Users\\erkebrant\\Desktop\\Jakub\\Nodejs\\pagination\\lol.pdf")
+          });
+
+    })
+
+})
 
 
 app.listen(8000,function(){

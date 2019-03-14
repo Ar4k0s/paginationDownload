@@ -1,10 +1,12 @@
 <html>
 
 <head>
-
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.css"/>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4/jq-3.3.1/dt-1.10.18/datatables.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/jszip-2.5.0/dt-1.10.18/af-2.3.3/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/rg-1.1.0/rr-1.2.4/sc-2.0.0/sl-1.3.0/datatables.min.css"/>
+ 
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+        <script type="text/javascript" src="https://cdn.datatables.net/v/bs4-4.1.1/jq-3.3.1/jszip-2.5.0/dt-1.10.18/af-2.3.3/b-1.5.6/b-colvis-1.5.6/b-flash-1.5.6/b-html5-1.5.6/b-print-1.5.6/cr-1.5.0/fc-3.2.5/fh-3.1.4/kt-2.5.0/r-2.2.2/rg-1.1.0/rr-1.2.4/sc-2.0.0/sl-1.3.0/datatables.min.js"></script>
+        
         
 </head>
 <body>
@@ -33,10 +35,48 @@
 
 
 $(document).ready(function() {
-    $('#example').DataTable( {
+  
+
+    var table = $('#example').DataTable( {
         "processing": true,
         "serverSide": true,
-        "ajax": "http://127.0.0.1:8000",
+        'dom': 'Bfrtip',
+    'buttons': [{
+     'extend': 'pdf',
+     'title': 'Customized PDF Title',
+      'filename': 'customized_pdf_file_name',
+      'action': function(a,b,c,d){
+        $.ajax({
+            url:"http://127.0.0.1:8000/asd",
+            data:table.ajax.params(),
+            success: function(res){
+                var csvData = new Blob([res], {type: 'text/csv;charset=utf-8;'});
+     //               var csvURL = window.URL.createObjectURL(csvData);
+      //              var tempLink = document.createElement('a');
+      //              tempLink.href = csvURL;
+      //              tempLink.setAttribute('download', 'data.csv');
+       //             tempLink.click();
+
+            }
+        })
+      }
+  
+    }, {
+      'extend': 'excel',
+      'title': 'Customized EXCEL Title',
+      'filename': 'customized_excel_file_name'
+    },
+    {
+            extend: 'collection',
+            text: 'Export',
+            buttons: ["excel",{ text: 'High priority',   action: function () { alert("Hello") } } ]
+        }
+],
+        "ajax":{
+            url:"http://127.0.0.1:8000",
+            data:  {qwe:4,asd:5}
+            
+        },
         "columns":[
             {"data":"_id"},
             {"data":"districtName"},
@@ -45,8 +85,8 @@ $(document).ready(function() {
     } );
 } );
 
+ 
 
-    
 </script>
         
 </body>
