@@ -1,0 +1,41 @@
+       function lol(){
+        dt={            
+            buttons: {
+                exportData: function(){                    
+                    return this.data
+                },
+                exportInfo: function(){
+                    return this.config
+                },
+                config:{
+                    filename:"jakub.xlsx",
+                    header:true,
+                    extend: 'excel'
+                    },
+                data:{header:[],body:[], footer:null},
+                        },
+            start: function(){
+                $.ajax({
+                    url: "https://my-json-server.typicode.com/typicode/demo/posts",
+                    
+                    }).done(function(data) {
+                    event=""
+                    node=""   
+                    dt.buttons.data.header=Object.keys(data[0])
+                    data.forEach(x => dt.buttons.data.body.push(Object.values(x)))
+                    
+                   $.fn.dataTable.ext.buttons.excelHtml5.action.call(dt,event,dt,node,dt.buttons.config)
+                    });
+               
+            },
+            processing: function(){
+
+            }
+           
+            
+        }
+        
+     
+        dt.start()
+     
+       }
